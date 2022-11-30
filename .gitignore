@@ -1,0 +1,37 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+migrations
+manage.py
+db.sqlite3
+
+# Backup files #
+*.bak
+
+# Visual Studio Code #
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history
+
+# Personal additions
+.mypy_cache
+__pycache__/
+*.pyc
+__localcode
+venv
+env
+.DS_Store
+local_settings.py
+_local_settings.py
+gunicorn-error-log
+!db.sqlite3
+db copy.sqlite3
+sgbd
+run.bat
+shell.bat
+v.bat
