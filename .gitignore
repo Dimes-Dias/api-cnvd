@@ -5,7 +5,7 @@
 __pycache__
 migrations
 manage.py
-db.sqlite3
+*.sqlite*
 
 # Backup files #
 *.bak
@@ -35,3 +35,4 @@ sgbd
 run.bat
 shell.bat
 v.bat
+requirements.txt
