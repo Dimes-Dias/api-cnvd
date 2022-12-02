@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     # minhas apps
     'cnvd',
+    'produtividade',
 ]
 
 MIDDLEWARE = [
@@ -94,7 +95,7 @@ DATABASES = {
 
 # Fonte: http://stackoverflow.com/a/18548287
 DATABASE_ROUTERS = ['project.database_router.DatabaseAppsRouter']
-DATABASE_APPS_MAPPING = {'cnvd': 'saj_mpac', }
+DATABASE_APPS_MAPPING = {'cnvd': 'saj_mpac', 'produtividade': 'saj_mpac', }
 
 
 # Password validation
