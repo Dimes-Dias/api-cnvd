@@ -1,7 +1,8 @@
 from django.urls import path
 
-from .views import (ClasseViewSet, LocalViewSet, ProcessoEnviadoViewSet,
-                    ProcessoErroViewSet, StatusViewSet, TotalViewSet)
+from .views import (ClassesLocaisAPIView, ClasseViewSet, LocalDrillDownViewSet,
+                    LocalViewSet, ProcessoEnviadoViewSet, ProcessoErroViewSet,
+                    TotalViewSet)
 
 app_name = 'cnvd'
 
@@ -50,6 +51,21 @@ urlpatterns = [
         LocalViewSet.as_view({'get': 'list'}),
         name='locais'
     ),
+    path(
+        'locais/<int:local_pk>/v1',
+        LocalViewSet.as_view({'get': 'list'}),
+        name='locais'
+    ),
+    path(
+        'locaisdrilldown/v1',
+        LocalDrillDownViewSet.as_view({'get': 'list'}),
+        name='locais-drilldown'
+    ),
+    path(
+        'classeslocais/v1',
+        ClassesLocaisAPIView.as_view(),
+        name='locais-teste'
+    ),
 
     # CLASSES -----------------------------------------------------
     # classes de erro com totais
@@ -59,24 +75,24 @@ urlpatterns = [
         name='classes'
     ),
     # classes de erro com totais, por local
-    path(
-        'classes/local/<int:local_pk>/v1',
-        ClasseViewSet.as_view({'get': 'list'}),
-        name='classes-filter'
-    ),
+    # path(
+    #     'classes/local/<int:local_pk>/v1',
+    #     ClasseViewSet.as_view({'get': 'list'}),
+    #     name='classes-filter'
+    # ),
 
     # STATUS -----------------------------------------------------
     # status de erro com totais
-    path(
-        'status/v1',
-        StatusViewSet.as_view({'get': 'list'}),
-        name='status'
-    ),
+    # path(
+    #     'status/v1',
+    #     StatusViewSet.as_view({'get': 'list'}),
+    #     name='status'
+    # ),
     # status de erro com totais, por local
-    path(
-        'status/local/<int:local_pk>/v1',
-        StatusViewSet.as_view({'get': 'list'}),
-        name='status-filter'
-    ),
+    # path(
+    #     'status/local/<int:local_pk>/v1',
+    #     StatusViewSet.as_view({'get': 'list'}),
+    #     name='status-filter'
+    # ),
 
 ]

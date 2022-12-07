@@ -1,23 +1,24 @@
 from django.urls import path
 
-from .views import AudienciasViewSet, DespachosViewSet, ManifestacoesViewSet
+from .views import (DespachosLocalViewSet, DespachosPeriodoViewSet,
+                    DespachosTotaisViewSet, DespachosUsuarioViewSet)
 
 app_name = 'produtividade'
 
 urlpatterns = [
     path(
-        'audiencias/v1',
-        AudienciasViewSet.as_view({'get': 'list'}),
-        name='audiencias'
+        'despachos/totais/v1',
+        DespachosTotaisViewSet.as_view({'get': 'list'}),
+        name='despachos-totais'
     ),
     path(
-        'despachos/v1',
-        DespachosViewSet.as_view({'get': 'list'}),
-        name='despachos'
+        'despachos/periodo/v1',
+        DespachosTotaisViewSet.as_view({'get': 'list'}),
+        name='despachos-periodo'
     ),
     path(
-        'manifestacoes/v1',
-        ManifestacoesViewSet.as_view({'get': 'list'}),
-        name='manifestacoes'
+        'despachos/locais/v1',
+        DespachosLocalViewSet.as_view({'get': 'list'}),
+        name='despachos-locais'
     ),
 ]

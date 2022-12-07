@@ -3,7 +3,7 @@ from django.db import models
 
 class Local(models.Model):
     id = models.BigIntegerField(primary_key=True)
-    nome = models.CharField(max_length=120)
+    name = models.CharField(max_length=120)
     total_enviados = models.IntegerField()
     total_erros = models.IntegerField()
 
@@ -13,8 +13,20 @@ class Local(models.Model):
         app_label = 'cnvd'
 
 
+class LocalDrillDown(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    drilldown = models.CharField(max_length=50)
+    name = models.CharField(max_length=120)
+    erros = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'localdrilldown'
+        app_label = 'cnvd'
+
+
 class Classe(models.Model):
-    descricao = models.CharField(primary_key=True, max_length=50)
+    name = models.CharField(primary_key=True, max_length=50)
     erros = models.IntegerField()
 
     class Meta:

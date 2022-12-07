@@ -29,7 +29,7 @@ SECRET_KEY = 'cuh*hf8ggw816p%p^nc^ahcr#j95rtwz6=(rr-69+m1$v%@xua'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+CSRF_TRUSTED_ORIGINS = 'https://localhost'
 
 # Application definition
 
@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # django-cors-headers
+    'corsheaders',
 
     # coisas do DRF
     'rest_framework',
@@ -53,12 +56,29 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# domínio para CORS
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = ['http://*']
+
+'''
+CORS_ALLOWED_ORIGINS = [
+    'http://paineis.localhost',
+    'http://172.17.14.20',
+    # 'http://paineis.localhost/dashboard/cnvd',
+    # 'http://localhost/paineis/public/dashboard/cnvd',
+    'http://localhost',
+]
+'''
+
 
 ROOT_URLCONF = 'project.urls'
 

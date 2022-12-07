@@ -1,14 +1,15 @@
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from sgbd.sql_cnvd import (CLASSE_SQL, CLASSE_SQL_FILTER, LOCAL_SQL,
-                           PROCESSO_ENV_SQL, PROCESSO_ENV_SQL_FILTER,
-                           PROCESSO_ERRO_SQL, PROCESSO_ERRO_SQL_FILTER,
-                           STATUS_SQL, STATUS_SQL_FILTER, TOTAL_SQL)
+from sgbd.sql_cnvd import (CLASSE_SQL, LOCAL_DRILLDOWN_SQL, LOCAL_SQL,
+                           LOCAL_SQL_FILTER, PROCESSO_ENV_SQL,
+                           PROCESSO_ENV_SQL_FILTER, PROCESSO_ERRO_SQL,
+                           PROCESSO_ERRO_SQL_FILTER, TOTAL_SQL)
 
-from .models import Classe, Local, Processo, Status, Total
-from .serializers import (ClasseSerializer, LocalSerializer,
-                          ProcessoSerializer, StatusSerializer,
-                          TotalSerializer)
+from .models import Classe, Local, LocalDrillDown, Processo, Total
+from .serializers import (ClasseSerializer, LocalDrillDownSerializer,
+                          LocalSerializer, ProcessoSerializer, TotalSerializer)
 
 
 class TotalViewSet(viewsets.ModelViewSet):
@@ -24,54 +25,80 @@ class TotalViewSet(viewsets.ModelViewSet):
 
 class LocalViewSet(viewsets.ModelViewSet):
 
-    try:
-        queryset = Local.objects.raw(LOCAL_SQL)
-    except Exception as e:  # noqa F841
-        queryset = ''
-
     serializer_class = LocalSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+
+        if self.kwargs.get('local_pk'):
+            try:
+                return Local.objects.raw(
+                    LOCAL_SQL_FILTER, [self.kwargs.get('local_pk')]
+                )
+            except Exception as e:  # noqa F841
+                return ''
+
+        try:
+            return Local.objects.raw(LOCAL_SQL)
+        except Exception as e:  # noqa F841
+            return ''
 
 
 class ClasseViewSet(viewsets.ModelViewSet):
 
+    try:
+        queryset = Classe.objects.raw(CLASSE_SQL)
+    except Exception as e:  # noqa F841
+        queryset = ''
+
     serializer_class = ClasseSerializer
     pagination_class = None
 
-    def get_queryset(self):
 
-        if self.kwargs.get('local_pk'):
-            try:
-                return Classe.objects.raw(
-                    CLASSE_SQL_FILTER, [self.kwargs.get('local_pk')]
-                )
-            except Exception as e:  # noqa F841
-                return ''
+class LocalDrillDownViewSet(viewsets.ModelViewSet):
 
-        try:
-            return Classe.objects.raw(CLASSE_SQL)
-        except Exception as e:  # noqa F841
-            return ''
+    try:
+        queryset = LocalDrillDown.objects.raw(LOCAL_DRILLDOWN_SQL)
+    except Exception as e:  # noqa F841
+        queryset = ''
 
-
-class StatusViewSet(viewsets.ModelViewSet):
-
-    serializer_class = StatusSerializer
+    serializer_class = LocalDrillDownSerializer
     pagination_class = None
 
-    def get_queryset(self):
 
-        if self.kwargs.get('local_pk'):
-            try:
-                return Status.objects.raw(
-                    STATUS_SQL_FILTER, [self.kwargs.get('local_pk')]
-                )
-            except Exception as e:  # noqa F841
-                return ''
+class ClassesLocaisAPIView(APIView):
 
-        try:
-            return Status.objects.raw(STATUS_SQL)
-        except Exception as e:  # noqa F841
-            return ''
+    def get(self, request):
+
+        classe = Classe.objects.raw(CLASSE_SQL)
+        local = LocalDrillDown.objects.raw(LOCAL_DRILLDOWN_SQL)
+
+        sclasse = ClasseSerializer(classe, many=True)
+        slocal = LocalDrillDownSerializer(local, many=True)
+        data = {'classes': sclasse.data, 'locais': slocal.data}
+
+        return Response(data)
+
+
+# class StatusViewSet(viewsets.ModelViewSet):
+
+#     serializer_class = StatusSerializer
+#     pagination_class = None
+
+#     def get_queryset(self):
+
+#         if self.kwargs.get('local_pk'):
+#             try:
+#                 return Status.objects.raw(
+#                     STATUS_SQL_FILTER, [self.kwargs.get('local_pk')]
+#                 )
+#             except Exception as e:  # noqa F841
+#                 return ''
+
+#         try:
+#             return Status.objects.raw(STATUS_SQL)
+#         except Exception as e:  # noqa F841
+#             return ''
 
 
 class ProcessoErroViewSet(viewsets.ModelViewSet):

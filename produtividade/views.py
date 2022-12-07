@@ -2,8 +2,9 @@ from datetime import datetime
 
 from rest_framework import viewsets
 
-from sgbd.sql_produtividade import (AUDIENCIAS_SQL, DESPACHOS_SQL,
-                                    MANIFESTACOES_SQL)
+from sgbd.sql_produtividade import (DESPACHOS_LOCAL_SQL, DESPACHOS_PERIODO_SQL,
+                                    DESPACHOS_TOTAIS_SQL,
+                                    DESPACHOS_USUARIO_SQL)
 
 from .models import Movimento
 from .serializers import MovimentoSerializer
@@ -37,7 +38,7 @@ def intervalo_de_dias(data_inicio, data_fim):
 
 
 # faz os ajustes no sql, conforme os filtros passados pela url
-def aplica_sql(sql, data_inicio, data_fim, id_local, id_responsavel):
+def aplica_sql(sql, data_inicio, data_fim, id_local, id_usuario):
     # aplica filtro de datas
     sql = sql.replace('#DATA_INICIO#', data_inicio)
     sql = sql.replace('#DATA_FIM#', data_fim)
@@ -46,9 +47,9 @@ def aplica_sql(sql, data_inicio, data_fim, id_local, id_responsavel):
         id_local = chr(37)+chr(37)
     sql = sql.replace('#ID_LOCAL#', id_local)
     # aplica filtro de responsável por id
-    if id_responsavel == 'todos' or id_responsavel == '':
-        id_responsavel = chr(37)+chr(37)
-    sql = sql.replace('#ID_RESPONSAVEL#', id_responsavel)
+    if id_usuario == 'todos' or id_usuario == '':
+        id_usuario = chr(37)+chr(37)
+    sql = sql.replace('#ID_USUARIO#', id_usuario)
     return sql
 
 
@@ -68,7 +69,7 @@ class BaseViewSet(viewsets.ModelViewSet):
 
             # recebe os demais parâmetros opcionais
             id_local = recebe_parametro(self, 'id_local')
-            id_responsavel = recebe_parametro(self, 'id_responsavel')
+            id_usuario = recebe_parametro(self, 'id_usuario')
 
             # aplica os filtros à estrutura sql e retorna o resultado
             # da consulta
@@ -78,7 +79,7 @@ class BaseViewSet(viewsets.ModelViewSet):
                     data_inicio,
                     data_fim,
                     id_local,
-                    id_responsavel
+                    id_usuario
                 ))
             except Exception as e:  # noqa F841
                 return ''
@@ -86,13 +87,17 @@ class BaseViewSet(viewsets.ModelViewSet):
         return ''
 
 
-class AudienciasViewSet(BaseViewSet):
-    sql = AUDIENCIAS_SQL
+class DespachosTotaisViewSet(BaseViewSet):
+    sql = DESPACHOS_TOTAIS_SQL
 
 
-class DespachosViewSet(BaseViewSet):
-    sql = DESPACHOS_SQL
+class DespachosPeriodoViewSet(BaseViewSet):
+    sql = DESPACHOS_PERIODO_SQL
 
 
-class ManifestacoesViewSet(BaseViewSet):
-    sql = MANIFESTACOES_SQL
+class DespachosLocalViewSet(BaseViewSet):
+    sql = DESPACHOS_LOCAL_SQL
+
+
+class DespachosUsuarioViewSet(BaseViewSet):
+    sql = DESPACHOS_USUARIO_SQL

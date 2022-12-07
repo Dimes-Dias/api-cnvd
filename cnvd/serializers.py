@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Classe, Local, Processo, Status, Total
+from .models import Classe, Local, LocalDrillDown, Processo, Status, Total
 
 
 # o ModelSerializer codifica/decodifica dados do model DadosEnviados
@@ -12,15 +12,43 @@ class ProcessoSerializer(serializers.ModelSerializer):
 
 
 class LocalSerializer(serializers.ModelSerializer):
+
+    data = serializers.SerializerMethodField()
+
     class Meta:
         model = Local
-        fields = '__all__'
+        fields = 'id', 'name', 'data',
+
+    def get_data(self, obj):
+        return [obj.total_enviados, obj.total_erros]
 
 
 class ClasseSerializer(serializers.ModelSerializer):
+
+    y = serializers.SerializerMethodField()
+    id = serializers.SerializerMethodField()
+
     class Meta:
         model = Classe
-        fields = '__all__'
+        fields = 'name', 'y', 'id',
+
+    def get_y(self, obj):
+        return obj.erros
+
+    def get_id(self, obj):
+        return obj.name
+
+
+class LocalDrillDownSerializer(serializers.ModelSerializer):
+
+    y = serializers.SerializerMethodField()
+
+    class Meta:
+        model = LocalDrillDown
+        fields = 'drilldown', 'name', 'y',
+
+    def get_y(self, obj):
+        return obj.erros
 
 
 class StatusSerializer(serializers.ModelSerializer):
