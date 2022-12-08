@@ -72,7 +72,6 @@ class ClassesLocaisAPIView(APIView):
 
         classe = Classe.objects.raw(CLASSE_SQL)
         local = LocalDrillDown.objects.raw(LOCAL_DRILLDOWN_SQL)
-
         sclasse = ClasseSerializer(classe, many=True)
         slocal = LocalDrillDownSerializer(local, many=True)
         data = {'classes': sclasse.data, 'locais': slocal.data}
