@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import (ClassesLocaisAPIView, ClasseViewSet, LocalDrillDownViewSet,
+from .views import (ClasseLocalViewSet, ClassesLocaisAPIView, ClasseViewSet,
                     LocalViewSet, ProcessoEnviadoViewSet, ProcessoErroViewSet,
                     TotalViewSet)
 
@@ -58,13 +58,13 @@ urlpatterns = [
     ),
     path(
         'locaisdrilldown/v1',
-        LocalDrillDownViewSet.as_view({'get': 'list'}),
+        ClasseLocalViewSet.as_view({'get': 'list'}),
         name='locais-drilldown'
     ),
     path(
         'classeslocais/v1',
         ClassesLocaisAPIView.as_view(),
-        name='locais-teste'
+        name='classes-locais'
     ),
 
     # CLASSES -----------------------------------------------------

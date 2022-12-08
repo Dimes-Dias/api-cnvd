@@ -2,13 +2,13 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from sgbd.sql_cnvd import (CLASSE_SQL, LOCAL_DRILLDOWN_SQL, LOCAL_SQL,
-                           LOCAL_SQL_FILTER, PROCESSO_ENV_SQL,
-                           PROCESSO_ENV_SQL_FILTER, PROCESSO_ERRO_SQL,
-                           PROCESSO_ERRO_SQL_FILTER, TOTAL_SQL)
+from sgbd.sql_cnvd import (CLASSE_SQL, LOCAL_SQL, LOCAL_SQL_FILTER,
+                           PROCESSO_ENV_SQL, PROCESSO_ENV_SQL_FILTER,
+                           PROCESSO_ERRO_SQL, PROCESSO_ERRO_SQL_FILTER,
+                           TOTAL_SQL)
 
-from .models import Classe, Local, LocalDrillDown, Processo, Total
-from .serializers import (ClasseSerializer, LocalDrillDownSerializer,
+from .models import Classe, Local, Processo, Total
+from .serializers import (ClasseLocalSerializer, ClasseSerializer,
                           LocalSerializer, ProcessoSerializer, TotalSerializer)
 
 
@@ -55,14 +55,14 @@ class ClasseViewSet(viewsets.ModelViewSet):
     pagination_class = None
 
 
-class LocalDrillDownViewSet(viewsets.ModelViewSet):
+class ClasseLocalViewSet(viewsets.ModelViewSet):
 
     try:
-        queryset = LocalDrillDown.objects.raw(LOCAL_DRILLDOWN_SQL)
+        queryset = Classe.objects.raw(CLASSE_SQL)
     except Exception as e:  # noqa F841
         queryset = ''
 
-    serializer_class = LocalDrillDownSerializer
+    serializer_class = ClasseLocalSerializer
     pagination_class = None
 
 
@@ -71,9 +71,8 @@ class ClassesLocaisAPIView(APIView):
     def get(self, request):
 
         classe = Classe.objects.raw(CLASSE_SQL)
-        local = LocalDrillDown.objects.raw(LOCAL_DRILLDOWN_SQL)
         sclasse = ClasseSerializer(classe, many=True)
-        slocal = LocalDrillDownSerializer(local, many=True)
+        slocal = ClasseLocalSerializer(classe, many=True)
         data = {'classes': sclasse.data, 'locais': slocal.data}
 
         return Response(data)

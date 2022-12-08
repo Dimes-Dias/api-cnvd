@@ -13,25 +13,28 @@ class Local(models.Model):
         app_label = 'cnvd'
 
 
-class LocalDrillDown(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    drilldown = models.CharField(max_length=50)
-    name = models.CharField(max_length=120)
-    erros = models.IntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'localdrilldown'
-        app_label = 'cnvd'
-
-
 class Classe(models.Model):
-    name = models.CharField(primary_key=True, max_length=50)
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=50)
     erros = models.IntegerField()
 
     class Meta:
         managed = False
         db_table = 'classe'
+        app_label = 'cnvd'
+
+
+class ClasseLocal(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    # classe = models.ForeignKey(
+    #     'Classe', related_name='data', on_delete=models.CASCADE)
+    classe = models.IntegerField()
+    name = models.CharField(max_length=120)
+    erros = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'classelocal'
         app_label = 'cnvd'
 
 
