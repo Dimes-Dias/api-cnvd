@@ -7,7 +7,8 @@ from sgbd.sql_produtividade import (DESPACHOS_LOCAL_SQL, DESPACHOS_PERIODO_SQL,
                                     DESPACHOS_USUARIO_SQL)
 
 from .models import Movimento
-from .serializers import MovimentoSerializer
+from .serializers import (LocalSerializer, PeriodoSerializer, TotalSerializer,
+                          UsuarioSerializer)
 
 
 # para evitar erros de aspas sobrando no sql
@@ -50,12 +51,11 @@ def aplica_sql(sql, data_inicio, data_fim, id_local, id_usuario):
     if id_usuario == 'todos' or id_usuario == '':
         id_usuario = chr(37)+chr(37)
     sql = sql.replace('#ID_USUARIO#', id_usuario)
+
     return sql
 
 
 class BaseViewSet(viewsets.ModelViewSet):
-
-    serializer_class = MovimentoSerializer
     sql = ''
 
     def get_queryset(self):
@@ -87,17 +87,33 @@ class BaseViewSet(viewsets.ModelViewSet):
         return ''
 
 
+# INÍCIO DE VIEWSETs RELACIONADAS A DESPACHOS
+
 class DespachosTotaisViewSet(BaseViewSet):
+    serializer_class = TotalSerializer
+    pagination_class = None
     sql = DESPACHOS_TOTAIS_SQL
 
 
 class DespachosPeriodoViewSet(BaseViewSet):
+    serializer_class = PeriodoSerializer
+    pagination_class = None
     sql = DESPACHOS_PERIODO_SQL
 
 
 class DespachosLocalViewSet(BaseViewSet):
+    serializer_class = LocalSerializer
+    pagination_class = None
     sql = DESPACHOS_LOCAL_SQL
 
 
 class DespachosUsuarioViewSet(BaseViewSet):
+    serializer_class = UsuarioSerializer
+    pagination_class = None
     sql = DESPACHOS_USUARIO_SQL
+
+# INÍCIO DE VIEWSETs RELACIONADAS A AUDIÊNCIAS
+
+# INÍCIO DE VIEWSETs RELACIONADAS A DENÚNCIAS
+
+# INÍCIO DE VIEWSETs RELACIONADAS A OUTRAS MANIFESTAÇÕES
